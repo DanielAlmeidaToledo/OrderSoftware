@@ -1,3 +1,9 @@
-const Login = () => <h1>Login</h1>;
+import { LoginWrapper } from "./style";
+
+const Login = () => (
+  <LoginWrapper>
+    <h1>Login</h1>
+  </LoginWrapper>
+);
 
 export default Login;
