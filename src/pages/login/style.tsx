@@ -21,6 +21,7 @@ export const Division = styled.div`
   align-items: center;
   justify-content: space-between;
   flex-direction: row !important;
+  margin: 1rem 0 !important;
 
   hr {
     width: 40%;
@@ -45,7 +46,7 @@ export const Form = styled.form`
   div {
     display: flex;
     flex-direction: column;
-    margin: 2rem 0 1rem;
+    margin: 1rem 0;
   }
 
   label {
