@@ -6,6 +6,8 @@ import {
   Division,
 } from "./style";
 
+import { useEffect } from "react";
+
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 
@@ -25,16 +27,27 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 export default function Login() {
-  const handleClick = () => {
-    const provider = new firebase.auth.GithubAuthProvider();
-    firebase.auth().signInWithRedirect(provider);
-  };
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user);
+      } else {
+        console.log("Não logado");
+      }
+    });
+  }, []);
 
   return (
     <LoginWrapper>
       <img src={Logo} alt="Logo" />
       <Form>
-        <ButtonGithub type="button" onClick={handleClick}>
+        <ButtonGithub
+          type="button"
+          onClick={() => {
+            const provider = new firebase.auth.GithubAuthProvider();
+            firebase.auth().signInWithRedirect(provider);
+          }}
+        >
           <img src={GithubLogo} alt="Github Logo" />
           Entrar com Github
         </ButtonGithub>
