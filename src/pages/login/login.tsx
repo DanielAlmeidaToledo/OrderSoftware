@@ -6,7 +6,7 @@ import {
   Division,
 } from "./style";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -26,28 +26,55 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+type UserProps = {
+  uid: string;
+  displayName: string | null;
+  photoURL: string | null;
+  email: string | null;
+  emailVerified: boolean;
+  phoneNumber: string | null;
+  isAnonymous: boolean;
+  providerData: any;
+  providerId: string;
+  refreshToken: string;
+  tenantId: string | null;
+};
+
 export default function Login() {
+  const [user, setUser] = useState<UserProps | null>(null);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log(user);
-      } else {
-        console.log("Não logado");
-      }
+      console.log("Usuário: ", user);
+      setIsUserLoggedIn(!!user);
+      setUser(user);
     });
   }, []);
+
+  // Realiza o login com o github
+  const handleLogin = () => {
+    const provider = new firebase.auth.GithubAuthProvider();
+    firebase.auth().signInWithRedirect(provider);
+  };
+
+  // Realiza o logout
+  const handleLogout = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        console.log("Deslogado");
+        setIsUserLoggedIn(false);
+        setUser(null);
+      });
+  };
 
   return (
     <LoginWrapper>
       <img src={Logo} alt="Logo" />
       <Form>
-        <ButtonGithub
-          type="button"
-          onClick={() => {
-            const provider = new firebase.auth.GithubAuthProvider();
-            firebase.auth().signInWithRedirect(provider);
-          }}
-        >
+        <ButtonGithub type="button" onAbort={handleLogin}>
           <img src={GithubLogo} alt="Github Logo" />
           Entrar com Github
         </ButtonGithub>
