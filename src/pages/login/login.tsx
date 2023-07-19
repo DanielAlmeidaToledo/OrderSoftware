@@ -7,24 +7,10 @@ import {
 } from "./style";
 
 import { useEffect, useState, useCallback } from "react";
-
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
+import firebase from "../../services/firebase";
 
 import GithubLogo from "../../assets/github.svg";
 import Logo from "../../assets/logo.svg";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAR-IYNMHQWp3JpxC-fzYrtARhcKNqqCIM",
-  authDomain: "software-pizzaria.firebaseapp.com",
-  projectId: "software-pizzaria",
-  storageBucket: "software-pizzaria.appspot.com",
-  messagingSenderId: "374054670729",
-  appId: "1:374054670729:web:7224a7cda50b6eebbf5158",
-  measurementId: "G-4JLNF58CGE",
-};
-
-firebase.initializeApp(firebaseConfig);
 
 type UserProps = {
   uid: string;
