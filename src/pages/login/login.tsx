@@ -6,7 +6,7 @@ import {
   Division,
 } from "./style";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -46,20 +46,20 @@ export default function Login() {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
-      console.log("Usuário: ", user);
       setIsUserLoggedIn(!!user);
       setUser(user);
+      console.log("Usuário: ", user);
     });
   }, []);
 
   // Realiza o login com o github
-  const handleLogin = () => {
+  const handleLogin = useCallback(() => {
     const provider = new firebase.auth.GithubAuthProvider();
-    firebase.auth().signInWithRedirect(provider);
-  };
+    firebase.auth().signInWithPopup(provider);
+  }, []);
 
   // Realiza o logout
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     firebase
       .auth()
       .signOut()
@@ -68,13 +68,13 @@ export default function Login() {
         setIsUserLoggedIn(false);
         setUser(null);
       });
-  };
+  }, []);
 
   return (
     <LoginWrapper>
       <img src={Logo} alt="Logo" />
       <Form>
-        <ButtonGithub type="button" onAbort={handleLogin}>
+        <ButtonGithub type="button" onClick={handleLogin}>
           <img src={GithubLogo} alt="Github Logo" />
           Entrar com Github
         </ButtonGithub>

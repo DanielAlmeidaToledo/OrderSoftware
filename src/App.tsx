@@ -1,31 +1,30 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+  Route,
+} from "react-router-dom";
+import { lazy, Suspense } from "react";
+import LinearProgress from "@mui/material/LinearProgress";
 
-import { MainPage } from "./pages/main";
-import { Login } from "./pages/login";
+const MainPage = lazy(() => import("./pages/main/main"));
+const Login = lazy(() => import("./pages/login/login"));
 
-const router = createBrowserRouter([
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/",
-    element: <MainPage />,
-    children: [
-      {
-        path: "/rota1",
-        element: <div>Rota 1</div>,
-      },
-      {
-        path: "/rota2",
-        element: <div>Rota 2</div>,
-      },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route path="/" element={<MainPage />} />
+      <Route path="/login" element={<Login />} />
+    </>
+  )
+);
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <Suspense fallback={<LinearProgress />}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 };
 
 export default App;
