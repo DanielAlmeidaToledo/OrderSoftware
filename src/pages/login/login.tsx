@@ -6,8 +6,9 @@ import {
   Division,
 } from "./style";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
 import firebase from "../../services/firebase";
+import { AuthContext } from "../../contexts/auth";
 
 import GithubLogo from "../../assets/github.svg";
 import Logo from "../../assets/logo.svg";
@@ -26,9 +27,14 @@ type UserProps = {
   tenantId: string | null;
 };
 
+type ContextProps = {
+  login: () => void;
+};
+
 export default function Login() {
   const [user, setUser] = useState<UserProps | null>(null);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const { login } = useContext<ContextProps>(AuthContext);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -36,12 +42,6 @@ export default function Login() {
       setUser(user);
       console.log("Usuário: ", user);
     });
-  }, []);
-
-  // Realiza o login com o github
-  const handleLogin = useCallback(() => {
-    const provider = new firebase.auth.GithubAuthProvider();
-    firebase.auth().signInWithPopup(provider);
   }, []);
 
   // Realiza o logout
@@ -60,7 +60,7 @@ export default function Login() {
     <LoginWrapper>
       <img src={Logo} alt="Logo" />
       <Form>
-        <ButtonGithub type="button" onClick={handleLogin}>
+        <ButtonGithub type="button" onClick={login}>
           <img src={GithubLogo} alt="Github Logo" />
           Entrar com Github
         </ButtonGithub>
