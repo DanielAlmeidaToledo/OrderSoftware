@@ -25,6 +25,8 @@ const router = createBrowserRouter(
 const App = () => {
   const { userInfo, setUserInfo } = useContext<ContextProps>(AuthContext);
 
+  const { isUserLoggedIn } = userInfo;
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       console.log("Usuário: ", user);
@@ -34,6 +36,26 @@ const App = () => {
       });
     });
   }, []);
+
+  if (isUserLoggedIn) {
+    console.log("Usuário logado");
+    if (location.pathname === "/login") {
+      console.log(
+        "Usuário logado e está na página de login. Redirecionado para home /"
+      );
+      // history.pushState({}, "", "/");
+    } else {
+      console.log("Usuário logado e não está na página de login");
+    }
+  } else {
+    console.log("Usuário não logado");
+    if (location.pathname === "/") {
+      console.log(
+        "Usuário não logado e está na página home. Redirecionado para login /login"
+      );
+      // history.pushState({}, "", "/login");
+    }
+  }
 
   return (
     <Suspense fallback={<LinearProgress />}>
