@@ -4,7 +4,7 @@ import {
   RouterProvider,
   Route,
 } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useEffect, useContext } from "react";
 import { AuthContext, ContextProps } from "./contexts/auth";
@@ -23,8 +23,9 @@ const router = createBrowserRouter(
 );
 
 const App = () => {
-  const { userInfo, setUserInfo } = useContext<ContextProps>(AuthContext);
-
+  const { userInfo, setUserInfo, logout } =
+    useContext<ContextProps>(AuthContext);
+  const [didCheckUserIn, setDidCheckUserIn] = useState(false);
   const { isUserLoggedIn } = userInfo;
 
   useEffect(() => {
@@ -34,8 +35,16 @@ const App = () => {
         isUserLoggedIn: !!user,
         user,
       });
+      setDidCheckUserIn(true);
     });
   }, []);
+
+  if (!didCheckUserIn) {
+    console.log("Ainda não checou se o usuário está logado ou não");
+    return <h1>Carregando...</h1>;
+  }
+
+  console.log("Checou se o usuário está logado ou não");
 
   if (isUserLoggedIn) {
     console.log("Usuário logado");
@@ -43,7 +52,7 @@ const App = () => {
       console.log(
         "Usuário logado e está na página de login. Redirecionado para home /"
       );
-      // history.pushState({}, "", "/");
+      history.pushState({}, "", "/");
     } else {
       console.log("Usuário logado e não está na página de login");
     }
@@ -53,7 +62,7 @@ const App = () => {
       console.log(
         "Usuário não logado e está na página home. Redirecionado para login /login"
       );
-      // history.pushState({}, "", "/login");
+      history.pushState({}, "", "/login");
     }
   }
 
