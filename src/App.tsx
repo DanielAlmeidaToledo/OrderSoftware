@@ -4,10 +4,9 @@ import {
   RouterProvider,
   Route,
 } from "react-router-dom";
-import { lazy, Suspense, useState } from "react";
-import LinearProgress from "@mui/material/LinearProgress";
-import { useEffect, useContext } from "react";
+import { lazy, Suspense, useState, useContext, useEffect } from "react";
 import { AuthContext, ContextProps } from "./contexts/auth";
+import LinearProgress from "@mui/material/LinearProgress";
 import firebase from "./services/firebase";
 
 const MainPage = lazy(() => import("./pages/main/main"));
@@ -40,30 +39,11 @@ const App = () => {
   }, []);
 
   if (!didCheckUserIn) {
-    console.log("Ainda não checou se o usuário está logado ou não");
     return <h1>Carregando...</h1>;
   }
 
-  console.log("Checou se o usuário está logado ou não");
-
-  if (isUserLoggedIn) {
-    console.log("Usuário logado");
-    if (location.pathname === "/login") {
-      console.log(
-        "Usuário logado e está na página de login. Redirecionado para home /"
-      );
-      history.pushState({}, "", "/");
-    } else {
-      console.log("Usuário logado e não está na página de login");
-    }
-  } else {
-    console.log("Usuário não logado");
-    if (location.pathname === "/") {
-      console.log(
-        "Usuário não logado e está na página home. Redirecionado para login /login"
-      );
-      history.pushState({}, "", "/login");
-    }
+  if (!isUserLoggedIn && location.pathname !== "/login") {
+    history.pushState({}, "", "/login");
   }
 
   return (
