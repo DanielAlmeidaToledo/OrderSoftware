@@ -1,10 +1,12 @@
+import { Header } from "../../components/Header/Header";
 import { Outlet } from "react-router-dom";
+import { Main } from "./style";
 
 export default function MainPage() {
   return (
-    <>
-      <h1>Main</h1>
+    <Main>
+      <Header />
       <Outlet />
-    </>
+    </Main>
   );
 }
